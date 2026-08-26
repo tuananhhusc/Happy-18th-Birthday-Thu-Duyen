@@ -22,12 +22,12 @@ export default function FakeLoading() {
         if (prev < texts.length - 1) return prev + 1;
         return prev;
       });
-    }, 600);
+    }, 1200);
 
-    // Hide loading screen after 4 seconds
+    // Hide loading screen after 8 seconds
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 4000);
+    }, 8000);
 
     return () => {
       clearInterval(interval);
@@ -63,7 +63,7 @@ export default function FakeLoading() {
         
         <div className="mt-6 w-full bg-gray-800 h-2">
           <div 
-            className="bg-[#00ff00] h-full transition-all duration-[4000ms] ease-linear"
+            className="bg-[#00ff00] h-full transition-all duration-[8000ms] ease-linear"
             style={{ width: loading ? '100%' : '0%' }}
           ></div>
         </div>
