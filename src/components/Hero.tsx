@@ -39,24 +39,24 @@ export default function Hero() {
       {/* Breaking News Ticker */}
       <div className="absolute top-0 left-0 w-full bg-tabloid-red text-white font-black py-2 flex overflow-hidden z-20 text-xl border-b-4 border-black border-dashed">
         <div className="animate-marquee whitespace-nowrap flex-shrink-0 min-w-full flex justify-around">
-          <span className="mx-4">🎉 CHÚC MỪNG SINH NHẬT TỶ TỶ TÀI SẮC VẸN TOÀN!</span>
-          <span className="mx-4 text-bright-yellow">🚨 CẢNH BÁO: CHUYÊN GIA NGỦ NƯỚNG!</span>
-          <span className="mx-4">🌸 NỮ THẦN TRONG MẮT THIÊN HẠ!</span>
-          <span className="mx-4 text-bright-yellow">😈 BÀ LA SÁT KHI Ở NHÀ!</span>
-          <span className="mx-4">💸 TIỀN TÀI VÔ NHƯ NƯỚC!</span>
-          <span className="mx-4 text-bright-yellow">📉 NHƯNG CHỐT ĐƠN NHƯ PHÁ MẢ!</span>
-          <span className="mx-4">✨ MÃI MÃI TUỔI 18!</span>
-          <span className="mx-4 text-bright-yellow">🦴 DÙ XƯƠNG KHỚP ĐÃ KÊU LỤC CỤC!</span>
+          <span className="mx-4">🎉 NGƯỜI CHỊ VĨ ĐẠI NHẤT HỆ MẶT TRỜI ĐÃ THÊM TUỔI!</span>
+          <span className="mx-4 text-bright-yellow">🚨 CẢNH BÁO: TÍNH KHÍ VẪN THẤT THƯỜNG NHƯ THỜI TIẾT!</span>
+          <span className="mx-4">💖 BÊN NGOÀI XINH ĐẸP, BÊN TRONG NHIỀU TIỀN!</span>
+          <span className="mx-4 text-bright-yellow">😠 BÊN NÀY THÌ MỖI LẦN CÁU LÀ CẢ NHÀ KHIẾP SỢ!</span>
+          <span className="mx-4">✨ CHÚC CHỊ MÃI TRẺ TRUNG VÀ HẠNH PHÚC BÌNH AN!</span>
+          <span className="mx-4 text-bright-yellow">🛌 NHƯNG LÀM ƠN BỚT NGỦ NƯỚNG LẠI DÙM CÁI!</span>
+          <span className="mx-4">💸 TIỀN TÀI VÀO NHƯ NƯỚC SÔNG ĐÀ!</span>
+          <span className="mx-4 text-bright-yellow">📦 LƯU Ý: VUI LÒNG HẠN CHẾ CHỐT ĐƠN SHOPEE!</span>
         </div>
         <div className="animate-marquee whitespace-nowrap flex-shrink-0 min-w-full flex justify-around" aria-hidden="true">
-          <span className="mx-4">🎉 CHÚC MỪNG SINH NHẬT TỶ TỶ TÀI SẮC VẸN TOÀN!</span>
-          <span className="mx-4 text-bright-yellow">🚨 CẢNH BÁO: CHUYÊN GIA NGỦ NƯỚNG!</span>
-          <span className="mx-4">🌸 NỮ THẦN TRONG MẮT THIÊN HẠ!</span>
-          <span className="mx-4 text-bright-yellow">😈 BÀ LA SÁT KHI Ở NHÀ!</span>
-          <span className="mx-4">💸 TIỀN TÀI VÔ NHƯ NƯỚC!</span>
-          <span className="mx-4 text-bright-yellow">📉 NHƯNG CHỐT ĐƠN NHƯ PHÁ MẢ!</span>
-          <span className="mx-4">✨ MÃI MÃI TUỔI 18!</span>
-          <span className="mx-4 text-bright-yellow">🦴 DÙ XƯƠNG KHỚP ĐÃ KÊU LỤC CỤC!</span>
+          <span className="mx-4">🎉 NGƯỜI CHỊ VĨ ĐẠI NHẤT HỆ MẶT TRỜI ĐÃ THÊM TUỔI!</span>
+          <span className="mx-4 text-bright-yellow">🚨 CẢNH BÁO: TÍNH KHÍ VẪN THẤT THƯỜNG NHƯ THỜI TIẾT!</span>
+          <span className="mx-4">💖 BÊN NGOÀI XINH ĐẸP, BÊN TRONG NHIỀU TIỀN!</span>
+          <span className="mx-4 text-bright-yellow">😠 BÊN NÀY THÌ MỖI LẦN CÁU LÀ CẢ NHÀ KHIẾP SỢ!</span>
+          <span className="mx-4">✨ CHÚC CHỊ MÃI TRẺ TRUNG VÀ HẠNH PHÚC BÌNH AN!</span>
+          <span className="mx-4 text-bright-yellow">🛌 NHƯNG LÀM ƠN BỚT NGỦ NƯỚNG LẠI DÙM CÁI!</span>
+          <span className="mx-4">💸 TIỀN TÀI VÀO NHƯ NƯỚC SÔNG ĐÀ!</span>
+          <span className="mx-4 text-bright-yellow">📦 LƯU Ý: VUI LÒNG HẠN CHẾ CHỐT ĐƠN SHOPEE!</span>
         </div>
       </div>
 
