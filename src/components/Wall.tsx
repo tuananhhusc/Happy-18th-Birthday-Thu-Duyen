@@ -330,16 +330,16 @@ export default function Wall() {
                   <button 
                     type="button"
                     onClick={isRecording ? stopRecording : startRecording}
-                    className={`border-2 border-black font-black px-4 py-2 flex items-center justify-center gap-2 transition-colors ${
+                    className={`border-2 border-black font-black px-2 md:px-4 py-2 text-sm md:text-base flex items-center justify-center gap-2 transition-colors ${
                       isRecording ? 'bg-red-500 text-white animate-pulse' : 'bg-white hover:bg-bright-yellow text-black'
                     }`}
                   >
-                    {isRecording ? '🛑 ĐANG THU ÂM (BẤM ĐỂ DỪNG)' : '🎙️ GHI ÂM CHỬI MẮNG'}
+                    {isRecording ? '🛑 ĐANG THU (BẤM ĐỂ DỪNG)' : '🎙️ GHI ÂM CHỬI MẮNG'}
                   </button>
                 ) : (
                   <div className="flex items-center gap-2 border-2 border-black bg-white p-2">
-                    <audio src={audioURL} controls className="h-10 flex-1" />
-                    <button type="button" onClick={removeAudio} className="text-xl hover:scale-125 transition-transform" title="Xoá ghi âm">
+                    <audio src={audioURL} controls className="h-10 flex-1 min-w-0 w-full" />
+                    <button type="button" onClick={removeAudio} className="text-xl hover:scale-125 transition-transform shrink-0 px-2" title="Xoá ghi âm">
                       🗑️
                     </button>
                   </div>
@@ -375,8 +375,8 @@ export default function Wall() {
                   const color = cardColors[i % cardColors.length];
                   
                   return (
-                    <div key={wish.id} className={`masonry-item ${rotation} transition-transform hover:rotate-0 hover:z-20 hover:scale-105 duration-200 cursor-default relative`}>
-                      <div className={`${color} border-4 border-black p-5 shadow-[6px_6px_0_0_rgba(0,0,0,1)] relative`}>
+                    <div key={wish.id} className={`masonry-item ${rotation} transition-transform hover:rotate-0 hover:z-20 hover:scale-105 duration-200 cursor-default relative w-full overflow-hidden`}>
+                      <div className={`${color} border-4 border-black p-4 md:p-5 shadow-[4px_4px_0_0_rgba(0,0,0,1)] md:shadow-[6px_6px_0_0_rgba(0,0,0,1)] relative`}>
                         
                         <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-10 h-4 bg-[rgba(255,255,255,0.5)] border-2 border-black rotate-[-5deg]"></div>
 
@@ -404,14 +404,14 @@ export default function Wall() {
                           </div>
                         )}
                         
-                        <p className="font-bold text-xl mb-4 leading-snug whitespace-pre-wrap line-clamp-4">
+                        <p className="font-bold text-lg md:text-xl mb-4 leading-snug whitespace-pre-wrap line-clamp-4 break-words">
                           "{wish.message}"
                         </p>
 
                         {/* Audio Player if audio exists */}
                         {wish.audio_url && (
-                          <div className="mb-4">
-                            <audio controls src={wish.audio_url} className="w-full h-10 border-2 border-black" />
+                          <div className="mb-4 w-full">
+                            <audio controls src={wish.audio_url} className="w-full h-10 border-2 border-black min-w-0" />
                           </div>
                         )}
                         
