@@ -404,7 +404,7 @@ export default function Wall() {
                           </div>
                         )}
                         
-                        <p className="font-bold text-lg md:text-xl mb-4 leading-snug whitespace-pre-wrap line-clamp-4 break-words">
+                        <p className="font-bold text-lg md:text-xl mb-4 leading-snug whitespace-pre-wrap break-words">
                           "{wish.message}"
                         </p>
 
