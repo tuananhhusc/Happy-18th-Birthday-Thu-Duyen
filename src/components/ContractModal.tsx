@@ -5,6 +5,9 @@ import { toast } from 'sonner';
 
 export default function ContractModal() {
   const [isOpen, setIsOpen] = useState(true);
+  const [step, setStep] = useState<'CHOICE' | 'PASSWORD' | 'CONTRACT'>('CHOICE');
+  const [password, setPassword] = useState('');
+  
   const [noPosition, setNoPosition] = useState({ top: 0, left: 0 });
   const [isMoved, setIsMoved] = useState(false);
   
@@ -44,8 +47,91 @@ export default function ContractModal() {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-2 sm:p-4">
-      {/* The Contract Paper */}
-      <div className="relative bg-[#fffee0] w-full max-w-2xl border-4 md:border-8 border-black p-3 md:p-5 shadow-[8px_8px_0_0_#ff107a] flex flex-col items-center max-h-[98vh] overflow-hidden font-sans">
+      
+      {step === 'CHOICE' && (
+        <div className="relative bg-[#fffee0] w-full max-w-md border-4 md:border-8 border-black p-6 md:p-8 shadow-[8px_8px_0_0_#ff107a] flex flex-col items-center animate-in zoom-in duration-300">
+          <h2 className="text-2xl md:text-3xl font-black uppercase text-center mb-6 border-b-4 border-black pb-4 w-full">
+            XÁC MINH DANH TÍNH
+          </h2>
+          <p className="font-bold mb-6 text-center text-sm md:text-base">
+            Trang web này có khu vực cần ký cam kết rủi ro. Bạn là ai?
+          </p>
+          <div className="flex flex-col gap-4 w-full">
+            <button 
+              onClick={() => {
+                setIsOpen(false);
+                toast.success("Chào mừng bạn đến với trang web! 🎉");
+              }}
+              className="bg-blue-400 text-black font-black text-sm md:text-lg py-3 px-4 border-4 border-black hover:bg-black hover:text-blue-400 transition-colors shadow-[4px_4px_0_0_#000]"
+            >
+              🧑‍🤝‍🧑 KHÁCH QUA ĐƯỜNG
+              <div className="text-xs font-normal mt-1">(Vào xem web luôn)</div>
+            </button>
+
+            <button 
+              onClick={() => setStep('PASSWORD')}
+              className="bg-neon-pink text-white font-black text-sm md:text-lg py-3 px-4 border-4 border-black hover:bg-black hover:text-neon-pink transition-colors shadow-[4px_4px_0_0_#000]"
+            >
+              👸 TÔI LÀ THU DUYÊN
+              <div className="text-xs font-normal mt-1">(Chị gái nhân vật chính)</div>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {step === 'PASSWORD' && (
+        <div className="relative bg-[#fffee0] w-full max-w-md border-4 md:border-8 border-black p-6 md:p-8 shadow-[8px_8px_0_0_#ff107a] flex flex-col items-center animate-in zoom-in duration-300">
+          <h2 className="text-2xl md:text-3xl font-black uppercase text-center mb-6 border-b-4 border-black pb-4 w-full">
+            NHẬP MẬT KHẨU
+          </h2>
+          <p className="font-bold mb-4 text-center text-sm md:text-base">
+            Để tránh người lạ ký bậy, vui lòng nhập mật khẩu:
+          </p>
+          <div className="w-full text-xs font-bold text-gray-600 mb-4 italic text-center">
+            (Gợi ý: Tên của chị viết liền không dấu, vd: thuduyen)
+          </div>
+          
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (password.toLowerCase() === 'thuduyen') {
+                setStep('CONTRACT');
+                toast.success("Xác nhận thân phận thành công! Mời ký cam kết.");
+              } else {
+                toast.error("Sai mật khẩu! Nghĩ kỹ lại xem tên mình là gì? 🤡");
+              }
+            }} 
+            className="w-full flex flex-col gap-5"
+          >
+            <input 
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border-4 border-black p-3 text-lg font-bold text-center focus:outline-none focus:bg-bright-yellow transition-colors"
+              placeholder="***"
+              autoFocus
+            />
+            <div className="flex gap-4">
+              <button 
+                type="button"
+                onClick={() => setStep('CHOICE')}
+                className="flex-1 bg-gray-300 text-black font-black py-3 border-4 border-black hover:bg-black hover:text-white transition-colors shadow-[4px_4px_0_0_#000]"
+              >
+                QUAY LẠI
+              </button>
+              <button 
+                type="submit"
+                className="flex-1 bg-green-500 text-white font-black py-3 border-4 border-black hover:bg-black hover:text-green-500 transition-colors shadow-[4px_4px_0_0_#000]"
+              >
+                XÁC NHẬN
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {step === 'CONTRACT' && (
+        <div className="relative bg-[#fffee0] w-full max-w-2xl border-4 md:border-8 border-black p-3 md:p-5 shadow-[8px_8px_0_0_#ff107a] flex flex-col items-center max-h-[98vh] overflow-hidden font-sans animate-in zoom-in duration-300">
         
         {/* Fake Seal */}
         <div className="absolute top-2 right-2 w-14 h-14 md:w-20 md:h-20 border-2 md:border-4 border-red-600 rounded-full flex flex-col items-center justify-center text-red-600 rotate-[15deg] opacity-80 pointer-events-none hidden sm:flex">
@@ -127,6 +213,7 @@ export default function ContractModal() {
 
         </div>
       </div>
+      )}
     </div>
   );
 }
