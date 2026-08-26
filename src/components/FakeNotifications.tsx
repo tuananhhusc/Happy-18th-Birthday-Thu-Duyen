@@ -47,12 +47,19 @@ export default function FakeNotifications() {
     // Start interval after 15 seconds to let user read the site first
     const timeout = setTimeout(() => {
       
+      let currentToastId: string | number | null = null;
+
       const interval = setInterval(() => {
         // Randomly pick a notification
         const notif = TROLL_NOTIFICATIONS[Math.floor(Math.random() * TROLL_NOTIFICATIONS.length)];
         
+        // Clear previous fake notification if it somehow stuck
+        if (currentToastId) {
+          toast.dismiss(currentToastId);
+        }
+
         // Show custom toast resembling a push notification
-        toast.custom((t) => (
+        currentToastId = toast.custom((t) => (
           <div className={`${notif.color} w-[calc(100vw-32px)] sm:w-full max-w-sm border-4 border-black p-4 shadow-[6px_6px_0_0_#000] flex gap-3 md:gap-4 items-start animate-in slide-in-from-right duration-300 mx-auto`}>
             <div className="text-2xl md:text-3xl bg-white border-2 border-black rounded-full p-2 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center shrink-0">
               {notif.icon}
@@ -69,6 +76,12 @@ export default function FakeNotifications() {
             </button>
           </div>
         ), { duration: 5000 });
+
+        // Force dismiss after exactly 5 seconds to prevent stacking if user unfocuses tab
+        const capturedId = currentToastId;
+        setTimeout(() => {
+          toast.dismiss(capturedId);
+        }, 5000);
 
       }, 15000); // Every 15 seconds
 
