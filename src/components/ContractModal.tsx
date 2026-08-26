@@ -7,12 +7,13 @@ export default function ContractModal() {
   const [isOpen, setIsOpen] = useState(true);
   const [step, setStep] = useState<'CHOICE' | 'PASSWORD' | 'CONTRACT'>('CHOICE');
   const [password, setPassword] = useState('');
+  const [checking, setChecking] = useState(false);
   
   const [noPosition, setNoPosition] = useState({ top: 0, left: 0 });
   const [isMoved, setIsMoved] = useState(false);
   
   const btnRef = useRef<HTMLButtonElement>(null);
-
+  
   // Prevent scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -92,13 +93,21 @@ export default function ContractModal() {
           </div>
           
           <form 
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              if (password.toLowerCase() === 'thuduyen') {
-                setStep('CONTRACT');
-                toast.success("Xác nhận thân phận thành công! Mời ký cam kết.");
-              } else {
-                toast.error("Sai mật khẩu! Nghĩ kỹ lại xem tên mình là gì? 🤡");
+              setChecking(true);
+              try {
+                const { verifySisterPassword } = await import('@/app/verify-action');
+                const isCorrect = await verifySisterPassword(password);
+                
+                if (isCorrect) {
+                  setStep('CONTRACT');
+                  toast.success("Xác nhận thân phận thành công! Mời ký cam kết.");
+                } else {
+                  toast.error("Sai mật khẩu! Nghĩ kỹ lại xem tên mình là gì? 🤡");
+                }
+              } finally {
+                setChecking(false);
               }
             }} 
             className="w-full flex flex-col gap-5"
@@ -115,15 +124,17 @@ export default function ContractModal() {
               <button 
                 type="button"
                 onClick={() => setStep('CHOICE')}
-                className="flex-1 bg-gray-300 text-black font-black py-3 border-4 border-black hover:bg-black hover:text-white transition-colors shadow-[4px_4px_0_0_#000]"
+                disabled={checking}
+                className="flex-1 bg-gray-300 text-black font-black py-3 border-4 border-black hover:bg-black hover:text-white transition-colors shadow-[4px_4px_0_0_#000] disabled:opacity-50"
               >
                 QUAY LẠI
               </button>
               <button 
                 type="submit"
-                className="flex-1 bg-green-500 text-white font-black py-3 border-4 border-black hover:bg-black hover:text-green-500 transition-colors shadow-[4px_4px_0_0_#000]"
+                disabled={checking}
+                className="flex-1 bg-green-500 text-white font-black py-3 border-4 border-black hover:bg-black hover:text-green-500 transition-colors shadow-[4px_4px_0_0_#000] disabled:opacity-50"
               >
-                XÁC NHẬN
+                {checking ? 'ĐANG KIỂM TRA...' : 'XÁC NHẬN'}
               </button>
             </div>
           </form>
