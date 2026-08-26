@@ -260,15 +260,40 @@ export default function Quiz() {
             </p>
 
             {score === QUESTIONS.length ? (
-              <div className="flex flex-col items-center w-full">
-                <p className="text-lg md:text-xl font-bold text-neon-pink bg-black px-4 py-2 mb-6 w-full">
+              <div className="flex flex-col items-center w-full relative overflow-hidden">
+                <p className="text-lg md:text-xl font-bold text-neon-pink bg-black px-4 py-2 mb-6 w-full z-20 relative">
                   🎉 CHÚC MỪNG! BẠN ĐÃ MỞ KHÓA KHO ẢNH DÌM HÀNG TUYỆT MẬT! 🎉
                 </p>
                 
+                {/* Mưa ảnh dìm (Falling Photos) */}
+                <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+                  {Array.from({ length: 20 }).map((_, i) => (
+                    <motion.img
+                      key={i}
+                      src="/anh-dim-may-bay.jpg"
+                      initial={{ y: -200, x: Math.random() * 400 - 200, rotate: Math.random() * 360, opacity: 0 }}
+                      animate={{ 
+                        y: 800, 
+                        x: Math.random() * 400 - 200, 
+                        rotate: Math.random() * 360 + 360,
+                        opacity: [0, 1, 1, 0]
+                      }}
+                      transition={{ 
+                        duration: 3 + Math.random() * 3, 
+                        repeat: Infinity, 
+                        delay: Math.random() * 5,
+                        ease: "linear"
+                      }}
+                      className="absolute top-0 w-16 h-16 md:w-24 md:h-24 object-cover border-4 border-black"
+                      style={{ left: `${Math.random() * 100}%` }}
+                    />
+                  ))}
+                </div>
+
                 <motion.div 
                   animate={{ rotate: [-2, 2, -2] }}
                   transition={{ repeat: Infinity, duration: 0.5 }}
-                  className="w-full max-w-sm bg-white border-8 border-tabloid-red p-2 md:p-4 shadow-[8px_8px_0_0_#000] md:shadow-[12px_12px_0_0_#000] relative cursor-pointer group mb-6"
+                  className="w-full max-w-sm bg-white border-8 border-tabloid-red p-2 md:p-4 shadow-[8px_8px_0_0_#000] md:shadow-[12px_12px_0_0_#000] relative cursor-pointer group mb-6 z-20"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img 

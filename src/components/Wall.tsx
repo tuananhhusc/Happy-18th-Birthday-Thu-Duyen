@@ -17,6 +17,7 @@ type Wish = {
   react_wow?: number;
   react_sad?: number;
   react_angry?: number;
+  audio_url?: string | null;
 };
 
 export default function Wall() {
@@ -24,6 +25,12 @@ export default function Wall() {
   const [author, setAuthor] = useState('');
   const [message, setMessage] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  
+  // Recording states
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [audioURL, setAudioURL] = useState<string | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -83,6 +90,40 @@ export default function Wall() {
     fetchWishes(nextPage);
   };
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      
+      const chunks: BlobPart[] = [];
+      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        setAudioBlob(blob);
+        setAudioURL(URL.createObjectURL(blob));
+      };
+      
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch (err) {
+      toast.error('Không thể truy cập micro! Vui lòng cấp quyền.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+    }
+  };
+
+  const removeAudio = () => {
+    setAudioBlob(null);
+    setAudioURL(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!author || !message) {
@@ -92,7 +133,9 @@ export default function Wall() {
 
     setSubmitting(true);
     let uploadedImageUrl = null;
+    let uploadedAudioUrl = null;
 
+    // Upload Image
     if (file) {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random()}.${fileExt}`;
@@ -115,10 +158,37 @@ export default function Wall() {
       uploadedImageUrl = publicUrlData.publicUrl;
     }
 
+    // Upload Audio
+    if (audioBlob) {
+      const fileName = `audio_${Math.random()}.webm`;
+      const filePath = `public/${fileName}`;
+      
+      const { error: audioUploadError } = await supabase.storage
+        .from('wishes_images')
+        .upload(filePath, audioBlob, { contentType: 'audio/webm' });
+        
+      if (audioUploadError) {
+        toast.error('Lỗi upload ghi âm!');
+        setSubmitting(false);
+        return;
+      }
+      
+      const { data: audioUrlData } = supabase.storage
+        .from('wishes_images')
+        .getPublicUrl(filePath);
+        
+      uploadedAudioUrl = audioUrlData.publicUrl;
+    }
+
     // Insert into database
     const { data, error } = await supabase
       .from('wishes')
-      .insert([{ author, message, image_url: uploadedImageUrl }])
+      .insert([{ 
+        author, 
+        message, 
+        image_url: uploadedImageUrl,
+        audio_url: uploadedAudioUrl
+      }])
       .select();
       
     if (!error && data) {
@@ -126,13 +196,14 @@ export default function Wall() {
       setAuthor('');
       setMessage('');
       setFile(null);
+      removeAudio();
       if (fileInputRef.current) fileInputRef.current.value = '';
       
       // Prepend to current state to avoid refetching everything
       setWishes(prev => [data[0] as Wish, ...prev]);
     } else {
       console.error(error);
-      toast.error('Lỗi lưu dữ liệu. Hãy kiểm tra console.');
+      toast.error('Lỗi lưu dữ liệu. Hãy kiểm tra console hoặc chạy SQL tạo cột audio_url.');
     }
     setSubmitting(false);
   };
@@ -241,15 +312,39 @@ export default function Wall() {
               />
             </div>
             
-            <div className="mb-6">
-              <label className="block font-bold text-lg mb-2">Tải ảnh dìm lên (Tuỳ chọn):</label>
+            <div className="mb-6 border-4 border-black p-4 bg-gray-50 flex flex-col gap-4">
+              <label className="block font-bold text-lg">Đính kèm ảnh & Ghi âm (Tuỳ chọn):</label>
+              
+              {/* Image Input */}
               <input 
                 type="file" 
                 accept="image/*"
                 ref={fileInputRef}
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
-                className="w-full border-4 border-black p-2 text-sm font-sans focus:outline-none focus:bg-bright-yellow transition-colors bg-white cursor-pointer"
+                className="w-full border-2 border-black p-2 text-sm font-sans focus:outline-none focus:bg-bright-yellow transition-colors bg-white cursor-pointer"
               />
+
+              {/* Audio Record Button */}
+              <div className="flex flex-col gap-2">
+                {!audioURL ? (
+                  <button 
+                    type="button"
+                    onClick={isRecording ? stopRecording : startRecording}
+                    className={`border-2 border-black font-black px-4 py-2 flex items-center justify-center gap-2 transition-colors ${
+                      isRecording ? 'bg-red-500 text-white animate-pulse' : 'bg-white hover:bg-bright-yellow text-black'
+                    }`}
+                  >
+                    {isRecording ? '🛑 ĐANG THU ÂM (BẤM ĐỂ DỪNG)' : '🎙️ GHI ÂM CHỬI MẮNG'}
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2 border-2 border-black bg-white p-2">
+                    <audio src={audioURL} controls className="h-10 flex-1" />
+                    <button type="button" onClick={removeAudio} className="text-xl hover:scale-125 transition-transform" title="Xoá ghi âm">
+                      🗑️
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
             
             <button 
@@ -264,7 +359,11 @@ export default function Wall() {
 
         {/* Masonry Grid Section */}
         <div className="col-span-1 lg:col-span-2">
-          {wishes.length === 0 ? (
+          {loading && wishes.length === 0 ? (
+            <div className="bg-white border-4 border-dashed border-black p-10 text-center font-bold text-xl rotate-1">
+              Đang tải bóc phốt... 🤡
+            </div>
+          ) : wishes.length === 0 ? (
             <div className="bg-white border-4 border-dashed border-black p-10 text-center font-bold text-xl rotate-1">
               Chưa ai dám bóc phốt. Hãy là người mở bát! 🤡
             </div>
@@ -308,6 +407,13 @@ export default function Wall() {
                         <p className="font-bold text-xl mb-4 leading-snug whitespace-pre-wrap line-clamp-4">
                           "{wish.message}"
                         </p>
+
+                        {/* Audio Player if audio exists */}
+                        {wish.audio_url && (
+                          <div className="mb-4">
+                            <audio controls src={wish.audio_url} className="w-full h-10 border-2 border-black" />
+                          </div>
+                        )}
                         
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-t-2 border-black border-dashed pt-2 mt-2 gap-2">
                           <div className="relative">
