@@ -6,6 +6,7 @@ export default function FakeLoading() {
   const [loading, setLoading] = useState(true);
   const [textIndex, setTextIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [barWidth, setBarWidth] = useState('0%');
 
   const texts = [
     "Khởi tạo liên kết an toàn...",
@@ -17,6 +18,11 @@ export default function FakeLoading() {
   ];
 
   useEffect(() => {
+    // Start smooth CSS bar animation
+    const initialTick = setTimeout(() => {
+      setBarWidth('100%');
+    }, 50);
+
     // Sequence of text changes
     const textInterval = setInterval(() => {
       setTextIndex(prev => {
@@ -25,7 +31,7 @@ export default function FakeLoading() {
       });
     }, 1200);
 
-    // Progress bar tick (100% in 7.5 seconds)
+    // Progress bar numeric tick (100% in 7.5 seconds)
     const progressInterval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
@@ -42,6 +48,7 @@ export default function FakeLoading() {
     }, 8000);
 
     return () => {
+      clearTimeout(initialTick);
       clearInterval(textInterval);
       clearInterval(progressInterval);
       clearTimeout(timeout);
@@ -72,13 +79,13 @@ export default function FakeLoading() {
           <div className="space-y-3 text-black font-bold text-xs md:text-base h-48 md:h-56 flex flex-col justify-end">
             {texts.slice(0, textIndex + 1).map((t, i) => (
               <div key={i} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <span className="text-neon-pink mr-2 text-lg">▶</span>
+                <span className="text-neon-pink mr-2 text-lg">▶ </span>
                 {t}
               </div>
             ))}
             {textIndex < texts.length - 1 && (
               <div className="animate-pulse mt-2">
-                <span className="text-neon-pink mr-2 text-lg">▶</span>
+                <span className="text-neon-pink mr-2 text-lg">▶ </span>
                 <span className="bg-black w-3 h-5 inline-block align-middle"></span>
               </div>
             )}
@@ -87,8 +94,8 @@ export default function FakeLoading() {
           {/* Progress Bar */}
           <div className="mt-6 md:mt-8 w-full bg-white border-4 border-black h-8 relative overflow-hidden p-1 shadow-[inset_4px_4px_0_0_rgba(0,0,0,0.1)]">
             <div 
-              className="bg-neon-pink h-full border-r-4 border-black transition-all duration-75 ease-linear"
-              style={{ width: `${progress}%` }}
+              className="bg-neon-pink h-full border-r-4 border-black transition-all ease-linear"
+              style={{ width: barWidth, transitionDuration: '7500ms' }}
             ></div>
           </div>
           <div className="text-center font-black text-xs mt-2 uppercase">
@@ -96,11 +103,6 @@ export default function FakeLoading() {
           </div>
         </div>
       </div>
-      
-      {/* Fun decorative elements */}
-      <div className="absolute top-10 left-10 text-4xl animate-bounce hidden md:block">🎉</div>
-      <div className="absolute bottom-20 right-10 text-5xl animate-spin-slow hidden md:block">🎂</div>
-      <div className="absolute top-20 right-20 text-4xl animate-pulse hidden md:block">🎁</div>
     </div>
   );
 }
