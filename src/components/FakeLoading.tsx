@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 export default function FakeLoading() {
   const [loading, setLoading] = useState(true);
   const [textIndex, setTextIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   const texts = [
     "Khởi tạo liên kết an toàn...",
@@ -17,12 +18,23 @@ export default function FakeLoading() {
 
   useEffect(() => {
     // Sequence of text changes
-    const interval = setInterval(() => {
+    const textInterval = setInterval(() => {
       setTextIndex(prev => {
         if (prev < texts.length - 1) return prev + 1;
         return prev;
       });
     }, 1200);
+
+    // Progress bar tick (100% in 7.5 seconds)
+    const progressInterval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return prev + 1;
+      });
+    }, 75);
 
     // Hide loading screen after 8 seconds
     const timeout = setTimeout(() => {
@@ -30,7 +42,8 @@ export default function FakeLoading() {
     }, 8000);
 
     return () => {
-      clearInterval(interval);
+      clearInterval(textInterval);
+      clearInterval(progressInterval);
       clearTimeout(timeout);
     };
   }, [texts.length]);
@@ -74,12 +87,12 @@ export default function FakeLoading() {
           {/* Progress Bar */}
           <div className="mt-6 md:mt-8 w-full bg-white border-4 border-black h-8 relative overflow-hidden p-1 shadow-[inset_4px_4px_0_0_rgba(0,0,0,0.1)]">
             <div 
-              className="bg-neon-pink h-full border-r-4 border-black transition-all duration-[8000ms] ease-linear"
-              style={{ width: loading ? '100%' : '0%' }}
+              className="bg-neon-pink h-full border-r-4 border-black transition-all duration-75 ease-linear"
+              style={{ width: `${progress}%` }}
             ></div>
           </div>
           <div className="text-center font-black text-xs mt-2 uppercase">
-            Đang tải dữ liệu tấu hài...
+            Đang tải dữ liệu tấu hài... {progress}%
           </div>
         </div>
       </div>
