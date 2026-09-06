@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 type Wish = {
   id: string;
@@ -46,6 +47,28 @@ export default function Wall() {
   // Fetch on mount
   useEffect(() => {
     fetchWishes(0);
+
+    // Setup Supabase Real-time
+    const channel = supabase
+      .channel('public:wishes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'wishes' }, (payload) => {
+        if (payload.eventType === 'INSERT') {
+          // Add new wish to the top, unless it's hidden
+          if (!payload.new.is_hidden) {
+            setWishes(prev => [payload.new as Wish, ...prev]);
+            toast.success('Vừa có người mới bóc phốt! 👀');
+          }
+        } else if (payload.eventType === 'UPDATE') {
+          setWishes(prev => prev.map(w => w.id === payload.new.id ? (payload.new as Wish) : w));
+        } else if (payload.eventType === 'DELETE') {
+          setWishes(prev => prev.filter(w => w.id !== payload.old.id));
+        }
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const handleTitleClick = () => {
@@ -127,7 +150,20 @@ export default function Wall() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!author || !message) {
-      toast.error('Nhập đủ tên và lời bóc phốt nha bạn êi! 🙄');
+      toast.error('Nhập đủ tên và lời bóc phốt nha bạn ới! 😤');
+      return;
+    }
+
+    // Kiểm tra dung lượng tối đa 10MB (10 * 1024 * 1024 bytes)
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
+    
+    if (file && file.size > MAX_FILE_SIZE) {
+      toast.error('Ảnh quá lớn! Tối đa 10MB thôi nhé! 🙄');
+      return;
+    }
+    
+    if (audioBlob && audioBlob.size > MAX_FILE_SIZE) {
+      toast.error('File ghi âm quá nặng! Tối đa 10MB thôi nhé! 🙄');
       return;
     }
 
@@ -392,10 +428,11 @@ export default function Wall() {
 
                         {wish.image_url && (
                           <div className="border-4 border-black mb-4 bg-white p-2 pb-6 shadow-sm group">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img 
+                            <Image 
                               src={wish.image_url} 
                               alt="Ảnh dìm" 
+                              width={800}
+                              height={800}
                               className="w-full h-auto object-cover max-h-64 border-2 border-black grayscale group-hover:grayscale-0 transition-all duration-300"
                               onError={(e) => {
                                 (e.target as HTMLImageElement).style.display = 'none';

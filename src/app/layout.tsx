@@ -10,6 +10,7 @@ const mali = Mali({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: "Cảnh Báo: Chị Tôi Già Thêm 1 Tuổi! 🚨",
   description: "Trang web bóc phốt và dìm hàng bá đạo nhất hệ mặt trời dành riêng cho người chị tuyệt vời!",
   keywords: ["Chúc mừng sinh nhật", "Bóc phốt", "Troll", "Happy Birthday", "Dìm hàng"],
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Cảnh Báo: Chị Tôi Già Thêm 1 Tuổi! 🚨",
     description: "Vào đây xem bằng chứng bóc phốt người chị 'tuyệt vời' của tui nha!",
-    url: "https://your-domain.com", // You can update this later
+    url: "/", 
     siteName: "Góc Bóc Phốt",
     images: [
       {
