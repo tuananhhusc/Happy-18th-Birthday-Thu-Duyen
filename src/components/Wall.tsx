@@ -318,37 +318,37 @@ export default function Wall() {
         <div className="col-span-1">
           <form 
             onSubmit={handleSubmit} 
-            className="bg-white border-8 border-black p-6 shadow-[12px_12px_0_0_rgba(0,0,0,1)] sticky top-8 z-30"
+            className="bg-[#fff0f5] border-4 md:border-8 border-black p-6 shadow-[8px_8px_0_0_#ff69b4] sticky top-8 z-30"
           >
-            <h3 className="text-2xl font-black mb-6 uppercase border-b-4 border-black pb-2 text-tabloid-red">
-              Gửi lời chúc bá đạo
+            <h3 className="text-2xl font-black mb-6 uppercase border-b-4 border-black pb-2 text-neon-pink">
+              Gửi gắm yêu thương 💌
             </h3>
             
             <div className="mb-4">
-              <label className="block font-bold text-lg mb-2">Tên người chúc:</label>
+              <label className="block font-bold text-lg mb-2">Tên người gửi:</label>
               <input 
                 type="text" 
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 required
                 className="w-full border-4 border-black p-3 text-lg font-sans focus:outline-none focus:bg-bright-yellow transition-colors"
-                placeholder="VD: Kẻ thù truyền kiếp"
+                placeholder="VD: Người hâm mộ bí ẩn ✨"
               />
             </div>
             
             <div className="mb-4">
-              <label className="block font-bold text-lg mb-2">Lời chúc / Bóc phốt:</label>
+              <label className="block font-bold text-lg mb-2">Lời chúc (hoặc ảnh dìm tí xíu):</label>
               <textarea 
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 required
                 rows={4}
                 className="w-full border-4 border-black p-3 text-lg font-sans focus:outline-none focus:bg-bright-yellow transition-colors"
-                placeholder="Chúc bả bớt khùng đi..."
+                placeholder="Viết vài lời sến súa hoặc hài hước vào đây nha..."
               />
             </div>
             
-            <div className="mb-6 border-4 border-black p-4 bg-gray-50 flex flex-col gap-4">
+            <div className="mb-6 border-4 border-black p-4 bg-[#ffe4e1] flex flex-col gap-4">
               <label className="block font-bold text-lg">Đính kèm ảnh & Ghi âm (Tuỳ chọn):</label>
               
               {/* Image Input */}
@@ -370,7 +370,7 @@ export default function Wall() {
                       isRecording ? 'bg-red-500 text-white animate-pulse' : 'bg-white hover:bg-bright-yellow text-black'
                     }`}
                   >
-                    {isRecording ? '🛑 ĐANG THU (BẤM ĐỂ DỪNG)' : '🎙️ GHI ÂM CHỬI MẮNG'}
+                    {isRecording ? '⏹️ ĐANG THU (BẤM ĐỂ DỪNG)' : '🎙️ GHI ÂM LỜI CHÚC'}
                   </button>
                 ) : (
                   <div className="flex items-center gap-2 border-2 border-black bg-white p-2">
@@ -388,7 +388,7 @@ export default function Wall() {
               disabled={submitting}
               className="w-full bg-neon-pink text-white font-black text-xl py-4 border-4 border-black hover:bg-black hover:text-neon-pink transition-colors shadow-[6px_6px_0_0_#000] active:translate-y-1 active:shadow-[2px_2px_0_0_#000] uppercase disabled:opacity-50"
             >
-              {submitting ? 'ĐANG TẢI LÊN...' : 'DÁN LÊN TƯỜNG! 📌'}
+              {submitting ? 'ĐANG TẢI LÊN...' : 'GỬI YÊU THƯƠNG! 🚀'}
             </button>
           </form>
         </div>
