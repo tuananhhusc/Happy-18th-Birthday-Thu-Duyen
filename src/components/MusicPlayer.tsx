@@ -12,37 +12,6 @@ export default function MusicPlayer() {
     if (!audio) return;
 
     audio.volume = 0.6; // Đặt âm lượng vừa phải
-
-    const playAudio = async () => {
-      try {
-        await audio.play();
-        setIsPlaying(true);
-      } catch (error) {
-        // Trình duyệt chặn autoplay, chờ người dùng tương tác
-        console.log("Autoplay blocked. Waiting for interaction...");
-      }
-    };
-
-    // Thử phát nhạc ngay lập tức
-    playAudio();
-
-    // Nếu trình duyệt chặn, phát ngay khi người dùng click bất cứ đâu
-    const handleInteraction = () => {
-      if (audio.paused) {
-        playAudio();
-      }
-      // Sau khi tương tác thì gỡ event để tối ưu
-      document.removeEventListener('click', handleInteraction);
-      document.removeEventListener('scroll', handleInteraction);
-    };
-
-    document.addEventListener('click', handleInteraction);
-    document.addEventListener('scroll', handleInteraction);
-
-    return () => {
-      document.removeEventListener('click', handleInteraction);
-      document.removeEventListener('scroll', handleInteraction);
-    };
   }, []);
 
   const togglePlay = () => {
