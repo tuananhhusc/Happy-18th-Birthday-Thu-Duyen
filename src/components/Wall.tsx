@@ -122,7 +122,9 @@ export default function Wall() {
       const chunks: BlobPart[] = [];
       mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
+        // Lấy đúng định dạng (mimeType) mà trình duyệt hỗ trợ (VD: audio/mp4 trên Safari)
+        const mimeType = mediaRecorder.mimeType || 'audio/webm';
+        const blob = new Blob(chunks, { type: mimeType });
         setAudioBlob(blob);
         setAudioURL(URL.createObjectURL(blob));
       };
@@ -196,12 +198,19 @@ export default function Wall() {
 
     // Upload Audio
     if (audioBlob) {
-      const fileName = `audio_${Math.random()}.webm`;
+      // Lấy đuôi file phù hợp với định dạng (mp4 cho iOS, webm cho Android/Desktop)
+      let ext = 'webm';
+      if (audioBlob.type.includes('mp4')) ext = 'm4a';
+      else if (audioBlob.type.includes('mpeg')) ext = 'mp3';
+      else if (audioBlob.type.includes('aac')) ext = 'aac';
+      else if (audioBlob.type.includes('ogg')) ext = 'ogg';
+
+      const fileName = `audio_${Math.random()}.${ext}`;
       const filePath = `public/${fileName}`;
       
       const { error: audioUploadError } = await supabase.storage
         .from('wishes_images')
-        .upload(filePath, audioBlob, { contentType: 'audio/webm' });
+        .upload(filePath, audioBlob, { contentType: audioBlob.type || 'audio/webm' });
         
       if (audioUploadError) {
         toast.error('Lỗi upload ghi âm!');
